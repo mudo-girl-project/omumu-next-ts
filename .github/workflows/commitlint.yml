@@ -21,8 +21,16 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-cache-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-cache-${{ runner.os }}-node-
+
+      - name: Install dependencies (uses npm install to avoid lockfile mismatch)
+        run: npm install
 
       - name: Run commitlint
         run: |
