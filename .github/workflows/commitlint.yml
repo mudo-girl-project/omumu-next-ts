@@ -1,0 +1,31 @@
+name: Commitlint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  commitlint:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run commitlint
+        run: |
+          # ensure we have the main branch for range comparison
+          git fetch origin main:main || true
+          npx --no-install commitlint --from=origin/main --to=HEAD
