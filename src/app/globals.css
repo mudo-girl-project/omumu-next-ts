@@ -1,26 +1,72 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 잿빛 도는 아이보리색 - 메인 배경 */
+  --ivory: #E8E4DE;
+  --ivory-light: #F2F0EB;
+  --ivory-dark: #D9D4CC;
+  
+  /* 채도 낮은 다크 브라운 - 메인 포인트 */
+  --brown: #4A4039;
+  --brown-light: #6B5D52;
+  --brown-dark: #352E28;
+  
+  /* 악센트 컬러 */
+  --accent: #8B7355;
+  --accent-light: #A69076;
+  --accent-dark: #6B5640;
+  
+  /* 기본 색상 */
+  --background: var(--ivory);
+  --foreground: var(--brown);
+  --muted: var(--ivory-dark);
+  --muted-foreground: var(--brown-light);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ivory: var(--ivory);
+  --color-ivory-light: var(--ivory-light);
+  --color-ivory-dark: var(--ivory-dark);
+  --color-brown: var(--brown);
+  --color-brown-light: var(--brown-light);
+  --color-brown-dark: var(--brown-dark);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ivory-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brown-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brown);
+}
+
+/* 선택 영역 스타일 */
+::selection {
+  background: var(--accent);
+  color: var(--ivory-light);
 }
