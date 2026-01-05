@@ -1,3 +1,4 @@
+import { GoogleAdSense } from "@/components/Script";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -13,9 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased">
-        {children}
-      </body>
+      <body className="antialiased">{children}</body>
+      <GoogleAdSense />
     </html>
   );
 }
