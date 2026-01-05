@@ -3,6 +3,8 @@
 오늘 무한도전 뭐 보지?
 밥 먹으면서 볼 무한도전 유튜브 영상을 AI가 추천해주는 서비스입니다.
 
+<img src="./src/screenshots/chat-example.gif" alt="오무무 채팅 및 답변 예시 이미지" />
+
 ## 기술 스택
 
 - **Framework**: Next.js 15 (App Router)
