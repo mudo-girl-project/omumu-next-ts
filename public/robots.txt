@@ -1,0 +1,10 @@
+# Allow all robots including Google AdSense bot
+User-agent: *
+Allow: /
+
+# Google AdSense bot - explicitly allow
+User-agent: Googlebot
+Allow: /
+
+# Sitemap
+Sitemap: https://omumu.vercel.app/sitemap.xml
