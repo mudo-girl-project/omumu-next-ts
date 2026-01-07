@@ -14,7 +14,8 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
-      content: "안녕하세요! 🍚📺\n\n저는 밥 먹으면서 볼 무한도전 영상을 추천해드리는 AI예요.\n\n어떤 분위기의 영상을 보고 싶으세요?\n\n예시:\n• \"유재석이 나오는 웃긴 영상 추천해줘\"\n• \"감동적인 무한도전 에피소드 알려줘\"\n• \"하하랑 길이 나오는 영상 찾아줘\"\n• \"무도 가요제 중에 제일 재밌는 거 추천해줘\"",
+      content:
+        '안녕하세요! 🍚📺\n\n저는 밥 먹으면서 볼 무한도전 영상을 추천해드리는 AI예요.\n\n어떤 분위기의 영상을 보고 싶으세요?\n\n예시:\n• "유재석이 나오는 웃긴 영상 추천해줘"\n• "감동적인 무한도전 에피소드 알려줘"\n• "박명수랑 정준하가 나오는 영상 찾아줘"\n• "무도 가요제 중에 제일 재밌는 거 추천해줘"',
       isUser: false,
     },
   ]);
@@ -84,9 +85,9 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden">
       {/* 채팅 메시지 영역 */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-2">
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -109,4 +110,3 @@ export default function Chatbot() {
     </div>
   );
 }
-
