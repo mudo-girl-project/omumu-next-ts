@@ -5,7 +5,7 @@ export default function Home() {
     <main className="bg-ivory flex h-screen flex-col overflow-hidden">
       {/* 헤더 */}
       <header className="bg-brown text-ivory-light shrink-0 px-6 py-4 shadow-lg">
-        <div className="mx-auto flex max-w-4xl items-center gap-4">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
           {/* 로고 영역 */}
           <div className="flex items-center gap-3">
             <div className="bg-ivory-light flex h-12 w-12 items-center justify-center rounded-full text-2xl">
@@ -24,14 +24,24 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 태그라인 */}
-          <div className="ml-auto hidden sm:block">
-            <span className="text-ivory-dark mr-2 text-sm italic">
-              &quot;오늘 무도 뭐 보지?!&quot;
-            </span>
-            <span className="text-ivory-dark/80 text-sm">
-              밥 먹으면서 볼 무도, AI가 찾아드려요
-            </span>
+          {/* 네비게이션 및 태그라인 */}
+          <div className="ml-auto hidden items-center gap-6 sm:flex">
+            <div className="flex flex-col items-end">
+              <span className="text-ivory-dark mr-0 mb-1 text-sm italic">
+                &quot;오늘 무도 뭐 보지?!&quot;
+              </span>
+              <span className="text-ivory-dark/80 text-sm">
+                밥 먹으면서 볼 무도, AI가 찾아드려요
+              </span>
+            </div>
+            <nav className="border-ivory-dark/30 flex gap-4 border-l pl-4">
+              <a
+                href="/about"
+                className="text-ivory-dark hover:text-ivory-light text-sm transition"
+              >
+                소개
+              </a>
+            </nav>
           </div>
         </div>
       </header>
