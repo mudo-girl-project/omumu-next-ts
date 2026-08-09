@@ -162,7 +162,7 @@ export default function Chatbot() {
       </div>
 
       {/* 입력 영역 */}
-      <ChatInput onSend={handleSend} disabled={isLoading} />
+      <ChatInput onSend={handleSend} submitting={isLoading} />
     </div>
   );
 }
