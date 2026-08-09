@@ -10,9 +10,46 @@ import {
   type ChatHistoryMessage,
 } from "@/lib/chatHistory";
 
+export async function requestChatReply(
+  message: string,
+  fetcher: typeof fetch = fetch
+): Promise<string> {
+  const response = await fetcher("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message }),
+  });
+  const data: unknown = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "object" &&
+        data !== null &&
+        "error" in data &&
+        typeof data.error === "string"
+        ? data.error
+        : "오류가 발생했습니다."
+    );
+  }
+
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    !("response" in data) ||
+    typeof data.response !== "string"
+  ) {
+    throw new Error("올바르지 않은 응답입니다.");
+  }
+
+  return data.response;
+}
+
 export default function Chatbot() {
   const [messages, setMessages] = useState<ChatHistoryMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [failedMessage, setFailedMessage] = useState<string | null>(null);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
   const [historyReady, setHistoryReady] = useState(false);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -58,6 +95,29 @@ export default function Chatbot() {
     }
   }, [historyReady, messages]);
 
+  const requestReply = async (message: string) => {
+    setIsLoading(true);
+    setFailedMessage(null);
+
+    try {
+      const reply = await requestChatReply(message);
+      const responseCreatedAt = Date.now();
+      const aiMessage: ChatHistoryMessage = {
+        id: (responseCreatedAt + 1).toString(),
+        content: reply,
+        isUser: false,
+        createdAt: responseCreatedAt,
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
+      setLastMessageId(aiMessage.id);
+    } catch {
+      setFailedMessage(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSend = async (message: string) => {
     const createdAt = Date.now();
     const userMessage: ChatHistoryMessage = {
@@ -69,51 +129,12 @@ export default function Chatbot() {
 
     setMessages((prev) => [...prev, userMessage]);
     setLastMessageId(userMessage.id);
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "오류가 발생했습니다.");
-      }
-
-      const responseCreatedAt = Date.now();
-      const aiMessage: ChatHistoryMessage = {
-        id: (responseCreatedAt + 1).toString(),
-        content: data.response,
-        isUser: false,
-        createdAt: responseCreatedAt,
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
-      setLastMessageId(aiMessage.id);
-    } catch (error) {
-      const responseCreatedAt = Date.now();
-      const errorMessage: ChatHistoryMessage = {
-        id: (responseCreatedAt + 1).toString(),
-        content: `죄송해요, 오류가 발생했어요. 😢\n\n${error instanceof Error ? error.message : "잠시 후 다시 시도해주세요."}`,
-        isUser: false,
-        createdAt: responseCreatedAt,
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
-      setLastMessageId(errorMessage.id);
-    } finally {
-      setIsLoading(false);
-    }
+    await requestReply(message);
   };
 
   const handleClear = () => {
     setMessages([]);
+    setFailedMessage(null);
     setLastMessageId(null);
 
     try {
@@ -156,6 +177,21 @@ export default function Chatbot() {
             />
           </div>
         ))}
+        {failedMessage && !isLoading && (
+          <div
+            role="alert"
+            className="border-accent-light bg-ivory mx-auto flex max-w-lg items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm"
+          >
+            <p>답변을 불러오지 못했어요.</p>
+            <button
+              type="button"
+              onClick={() => void requestReply(failedMessage)}
+              className="bg-brown text-ivory-light hover:bg-brown-dark focus-visible:ring-brown min-h-11 shrink-0 rounded-lg px-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              다시 시도
+            </button>
+          </div>
+        )}
         {isLoading && (
           <ChatMessage message="" isUser={false} isLoading={true} />
         )}
