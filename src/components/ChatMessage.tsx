@@ -47,6 +47,7 @@ export default function ChatMessage({
             : "bg-ivory-dark text-brown-dark rounded-bl-md"
         }`}
       >
+        <span className="sr-only">{isUser ? "사용자:" : "오무무:"}</span>
         {isLoading ? (
           <div
             className="flex items-center gap-2"
@@ -55,15 +56,15 @@ export default function ChatMessage({
           >
             <div className="flex gap-1">
               <span
-                className="bg-brown-light h-2 w-2 animate-bounce rounded-full"
+                className="bg-brown-light h-2 w-2 animate-bounce rounded-full motion-reduce:animate-none"
                 style={{ animationDelay: "0ms" }}
               />
               <span
-                className="bg-brown-light h-2 w-2 animate-bounce rounded-full"
+                className="bg-brown-light h-2 w-2 animate-bounce rounded-full motion-reduce:animate-none"
                 style={{ animationDelay: "150ms" }}
               />
               <span
-                className="bg-brown-light h-2 w-2 animate-bounce rounded-full"
+                className="bg-brown-light h-2 w-2 animate-bounce rounded-full motion-reduce:animate-none"
                 style={{ animationDelay: "300ms" }}
               />
             </div>
@@ -132,9 +133,10 @@ export default function ChatMessage({
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brown hover:text-brown-dark underline"
+                    className="text-brown hover:text-brown-dark focus-visible:ring-brown rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
                     {children}
+                    <span className="sr-only"> (새 창에서 열림)</span>
                   </a>
                 ),
                 // 인용구
@@ -161,7 +163,7 @@ export default function ChatMessage({
                     )
                   )
                 }
-                className="text-brown-light hover:text-brown focus-visible:ring-brown rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="text-brown hover:text-brown-dark focus-visible:ring-brown -mr-2 inline-flex min-h-11 items-center rounded px-2 underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 답변 복사
               </button>
@@ -169,7 +171,7 @@ export default function ChatMessage({
             {typeof createdAt === "number" && time && (
               <time
                 dateTime={new Date(createdAt).toISOString()}
-                className="opacity-60"
+                className={isUser ? "text-ivory-dark" : "text-brown"}
               >
                 {time}
               </time>
