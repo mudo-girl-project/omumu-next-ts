@@ -25,7 +25,8 @@ export function parseChatHistory(value: string | null): ChatHistoryMessage[] | n
           typeof message.content === "string" &&
           typeof message.isUser === "boolean" &&
           typeof message.createdAt === "number" &&
-          Number.isFinite(message.createdAt)
+          Number.isFinite(message.createdAt) &&
+          Math.abs(message.createdAt) <= 8.64e15
       )
     ) {
       return null;

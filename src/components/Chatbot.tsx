@@ -138,7 +138,7 @@ export default function Chatbot() {
         <button
           type="button"
           onClick={handleClear}
-          disabled={messages.length <= 1}
+          disabled={isLoading || messages.length <= 1}
           className="text-brown-light hover:text-brown text-xs underline disabled:cursor-not-allowed disabled:opacity-50"
         >
           대화 지우기

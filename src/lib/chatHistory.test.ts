@@ -33,4 +33,12 @@ describe("parseChatHistory", () => {
       )
     ).toBeNull();
   });
+
+  it("ignores timestamps outside the JavaScript Date range", () => {
+    expect(
+      parseChatHistory(
+        '[{"id":"1","content":"추천해줘","isUser":true,"createdAt":8640000000000001}]'
+      )
+    ).toBeNull();
+  });
 });
