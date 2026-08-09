@@ -31,12 +31,14 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="어떤 무도 영상 볼까요?"
+        aria-label="무한도전 영상 요청"
         disabled={disabled}
         className="flex-1 resize-none rounded-xl border border-brown-light/30 bg-ivory px-3 py-3 sm:px-4 text-sm sm:text-base text-brown placeholder:text-brown-light/60 focus:border-brown focus:outline-none focus:ring-2 focus:ring-brown/20 disabled:opacity-50 min-h-[48px] sm:min-h-[52px] max-h-[120px]"
         rows={1}
       />
       <button
         onClick={handleSend}
+        aria-label="메시지 보내기"
         disabled={!input.trim() || disabled}
         className="px-4 sm:px-6 py-3 bg-brown text-ivory-light rounded-xl font-medium hover:bg-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
       >
@@ -53,4 +55,3 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
     </div>
   );
 }
-
