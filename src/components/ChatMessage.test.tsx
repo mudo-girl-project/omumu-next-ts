@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import ChatMessage, * as ChatMessageModule from "./ChatMessage";
+import ChatMessage, { copyChatMessage } from "./ChatMessage";
 
 describe("ChatMessage", () => {
   it("offers copy only for assistant responses", () => {
@@ -16,11 +16,6 @@ describe("ChatMessage", () => {
   });
 
   it("reports clipboard success and failure", async () => {
-    const copyChatMessage = Reflect.get(ChatMessageModule, "copyChatMessage");
-
-    expect(copyChatMessage).toBeTypeOf("function");
-    if (typeof copyChatMessage !== "function") return;
-
     let copied = "";
     expect(
       await copyChatMessage("추천 답변", async (text: string) => {

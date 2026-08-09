@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import Chatbot, * as ChatbotModule from "./Chatbot";
+import Chatbot, { requestChatReply } from "./Chatbot";
 
 describe("Chatbot", () => {
   it("offers useful prompts before the first message", () => {
@@ -14,11 +14,6 @@ describe("Chatbot", () => {
   });
 
   it("uses one request function for chat replies", async () => {
-    const requestChatReply = Reflect.get(ChatbotModule, "requestChatReply");
-
-    expect(requestChatReply).toBeTypeOf("function");
-    if (typeof requestChatReply !== "function") return;
-
     const fetcher: typeof fetch = async (input, init) => {
       expect(input).toBe("/api/chat");
       expect(init?.body).toBe(JSON.stringify({ message: "웃긴 편" }));
@@ -30,11 +25,6 @@ describe("Chatbot", () => {
   });
 
   it("rejects failed and malformed chat responses", async () => {
-    const requestChatReply = Reflect.get(ChatbotModule, "requestChatReply");
-
-    expect(requestChatReply).toBeTypeOf("function");
-    if (typeof requestChatReply !== "function") return;
-
     const failed: typeof fetch = async () =>
       Response.json({ error: "잠시 후 다시 시도해주세요." }, { status: 503 });
     const malformed: typeof fetch = async () => Response.json({ response: 1 });
