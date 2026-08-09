@@ -4,6 +4,11 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
 
+const timeFormatter = new Intl.DateTimeFormat("ko-KR", {
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
 export async function copyChatMessage(
   message: string,
   writeText: (text: string) => Promise<void>
@@ -31,12 +36,7 @@ export default function ChatMessage({
 }: ChatMessageProps) {
   const [copyStatus, setCopyStatus] = useState("");
   const time =
-    typeof createdAt === "number"
-      ? new Intl.DateTimeFormat("ko-KR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(createdAt)
-      : null;
+    typeof createdAt === "number" ? timeFormatter.format(createdAt) : null;
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>

@@ -6,7 +6,9 @@ import ChatInput from "./ChatInput";
 import ChatWelcome from "./ChatWelcome";
 import {
   CHAT_HISTORY_KEY,
+  limitChatHistory,
   parseChatHistory,
+  serializeChatHistory,
   type ChatHistoryMessage,
 } from "@/lib/chatHistory";
 
@@ -89,7 +91,10 @@ export default function Chatbot() {
     }
 
     try {
-      window.localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+      window.localStorage.setItem(
+        CHAT_HISTORY_KEY,
+        serializeChatHistory(messages)
+      );
     } catch {
       // Keep the current conversation available even when browser storage is unavailable.
     }
@@ -109,7 +114,7 @@ export default function Chatbot() {
         createdAt: responseCreatedAt,
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages((prev) => limitChatHistory([...prev, aiMessage]));
       setLastMessageId(aiMessage.id);
     } catch {
       setFailedMessage(message);
@@ -127,7 +132,7 @@ export default function Chatbot() {
       createdAt,
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => limitChatHistory([...prev, userMessage]));
     setLastMessageId(userMessage.id);
     await requestReply(message);
   };
@@ -167,6 +172,8 @@ export default function Chatbot() {
             ref={(el) => {
               if (el) {
                 messageRefs.current.set(msg.id, el);
+              } else {
+                messageRefs.current.delete(msg.id);
               }
             }}
           >
