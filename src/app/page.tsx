@@ -1,4 +1,5 @@
 import Chatbot from "@/components/Chatbot";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -16,11 +17,6 @@ export default function Home() {
               <p className="text-ivory-dark text-xs opacity-80">
                 무한도전 영상 추천 AI
               </p>
-              {/* SEO/크롤러용 숨김 텍스트 */}
-              <p className="hidden text-xs">
-                무한도전 영상 추천 AI 봇. 구글 Gemini를 활용한 무한도전 유튜브
-                추천 서비스. 밥 먹으면서 볼 재미있는 무도 영상을 찾아드립니다.
-              </p>
             </div>
           </div>
 
@@ -35,12 +31,12 @@ export default function Home() {
               </span>
             </div>
             <nav className="border-ivory-dark/30 flex gap-4 border-l pl-4">
-              <a
+              <Link
                 href="/about"
                 className="text-ivory-dark hover:text-ivory-light text-sm transition"
               >
                 소개
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -60,24 +56,6 @@ export default function Home() {
             무도 없이 밥 못 먹는 무도 키즈들을 위해 ❤️
           </span>
         </p>
-
-        {/* SEO 컨텐츠 - 화면에서는 숨김 */}
-        <div className="text-ivory-dark/70 mt-4 hidden space-y-2">
-          <p>
-            <strong>오무무는 무한도전 영상 추천 AI입니다.</strong>
-            Google Gemini AI를 활용하여 사용자의 취향에 맞는 무한도전 유튜브
-            영상을 추천해드립니다.
-          </p>
-          <p>
-            유재석, 정준하, 하하, 길 등 출연진별 추천, 웃긴 영상, 감동적인
-            에피소드, 무도 가요제 등 다양한 카테고리의 무한도전 컨텐츠를 찾을 수
-            있습니다.
-          </p>
-          <p>
-            밥 먹으면서 재미있게 볼 수 있는 최고의 무한도전 영상을 AI가
-            스마트하게 추천합니다.
-          </p>
-        </div>
       </footer>
     </main>
   );

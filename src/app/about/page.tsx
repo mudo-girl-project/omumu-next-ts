@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "오무무 - 소개 | 무한도전 영상 추천 AI",
@@ -27,11 +28,6 @@ const aboutPageSchema = {
     },
     areaServed: "KR",
     availableLanguage: "ko",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5",
-      ratingCount: "1",
-    },
   },
 };
 
@@ -141,8 +137,8 @@ export default function About() {
                   📌 특정 출연진의 영상만 찾을 수 있나요?
                 </summary>
                 <p className="text-brown/70 mt-4">
-                  네, 가능합니다. "유재석이 나오는 에피소드", "박명수 중심의
-                  웃긴 영상" 등으로 검색하시면 됩니다.
+                  네, 가능합니다. &quot;유재석이 나오는 에피소드&quot;,
+                  &quot;박명수 중심의 웃긴 영상&quot; 등으로 검색하시면 됩니다.
                 </p>
               </details>
               <details className="rounded-lg bg-white p-6 shadow-md">
@@ -181,12 +177,12 @@ export default function About() {
             <p className="text-brown/70 mb-8">
               오무무와 함께 당신이 좋아할 무한도전 영상을 찾아보세요.
             </p>
-            <a
+            <Link
               href="/"
               className="bg-brown text-ivory-light hover:bg-brown-dark inline-block rounded-lg px-8 py-3 font-bold transition"
             >
               오무무 시작하기 →
-            </a>
+            </Link>
           </section>
         </div>
       </main>

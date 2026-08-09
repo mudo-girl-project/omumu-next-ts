@@ -34,12 +34,6 @@ export const geminiModel = genAI.getGenerativeModel({
 export async function getVideoRecommendation(
   userMessage: string
 ): Promise<string> {
-  try {
-    const result = await geminiModel.generateContent(userMessage);
-    const response = result.response;
-    return response.text();
-  } catch (error) {
-    console.error("Gemini API 오류:", error);
-    throw new Error("영상 추천을 가져오는데 실패했습니다.");
-  }
+  const result = await geminiModel.generateContent(userMessage);
+  return result.response.text();
 }

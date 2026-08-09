@@ -7,11 +7,11 @@
 
 ## 기술 스택
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: TailwindCSS
 - **Font**: Pretendard (프리텐다드)
-- **AI**: Google Gemini 1.5 Flash
+- **AI**: Google Gemini 2.5 Flash (기본값)
 
 ## 시작하기
 
@@ -23,11 +23,15 @@ npm install
 
 ### 2. 환경 변수 설정
 
-프로젝트 루트에 `.env.local` 파일을 생성하고 Gemini API 키를 입력하세요:
+프로젝트 루트에서 예시 파일을 복사한 뒤 값을 입력하세요:
 
 ```bash
-GEMINI_API_KEY=your_gemini_api_key_here
+cp .env.example .env.local
 ```
+
+- `GEMINI_API_KEY`: Google AI Studio에서 발급한 Gemini API 키
+- `GEMINI_MODEL`: 사용할 모델(기본값: `gemini-2.5-flash`)
+- `ADSENSE_CLIENT`: AdSense publisher ID에서 `ca-pub-`를 제외한 값(광고를 사용할 때만)
 
 > 💡 Gemini API 키는 [Google AI Studio](https://aistudio.google.com/app/apikey)에서 무료로 발급받을 수 있습니다.
 
@@ -38,6 +42,14 @@ npm run dev
 ```
 
 [http://localhost:3000](http://localhost:3000)에서 확인하세요.
+
+### 4. 검증
+
+```bash
+npm run lint
+npm test
+npm run build
+```
 
 ## 주요 기능
 
