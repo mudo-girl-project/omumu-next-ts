@@ -1,7 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
+
+export async function copyChatMessage(
+  message: string,
+  writeText: (text: string) => Promise<void>
+): Promise<string> {
+  try {
+    await writeText(message);
+    return "답변을 복사했어요.";
+  } catch {
+    return "복사하지 못했어요.";
+  }
+}
 
 interface ChatMessageProps {
   message: string;
@@ -16,6 +29,7 @@ export default function ChatMessage({
   isLoading,
   createdAt,
 }: ChatMessageProps) {
+  const [copyStatus, setCopyStatus] = useState("");
   const time =
     typeof createdAt === "number"
       ? new Intl.DateTimeFormat("ko-KR", {
@@ -135,14 +149,36 @@ export default function ChatMessage({
             </ReactMarkdown>
           </div>
         )}
-        {typeof createdAt === "number" && time && !isLoading && (
-          <time
-            dateTime={new Date(createdAt).toISOString()}
-            className="mt-1 block text-right text-xs opacity-60"
-          >
-            {time}
-          </time>
+        {!isLoading && (
+          <div className="mt-1 flex min-h-5 items-center justify-end gap-3 text-xs">
+            {!isUser && (
+              <button
+                type="button"
+                onClick={async () =>
+                  setCopyStatus(
+                    await copyChatMessage(message, (text) =>
+                      navigator.clipboard.writeText(text)
+                    )
+                  )
+                }
+                className="text-brown-light hover:text-brown focus-visible:ring-brown rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                답변 복사
+              </button>
+            )}
+            {typeof createdAt === "number" && time && (
+              <time
+                dateTime={new Date(createdAt).toISOString()}
+                className="opacity-60"
+              >
+                {time}
+              </time>
+            )}
+          </div>
         )}
+        <span aria-live="polite" className="sr-only">
+          {copyStatus}
+        </span>
       </div>
     </div>
   );
