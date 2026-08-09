@@ -3,24 +3,15 @@
 import { useState, useRef, useEffect } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import ChatWelcome from "./ChatWelcome";
 import {
   CHAT_HISTORY_KEY,
   parseChatHistory,
   type ChatHistoryMessage,
 } from "@/lib/chatHistory";
 
-const welcomeMessage = (): ChatHistoryMessage => ({
-  id: "welcome",
-  content:
-    '안녕하세요! 🍚📺\n\n저는 밥 먹으면서 볼 무한도전 영상을 추천해드리는 AI예요.\n\n어떤 분위기의 영상을 보고 싶으세요?\n\n예시:\n• "유재석이 나오는 웃긴 영상 추천해줘"\n• "감동적인 무한도전 에피소드 알려줘"\n• "박명수랑 정준하가 나오는 영상 찾아줘"\n• "무도 가요제 중에 제일 재밌는 거 추천해줘"',
-  isUser: false,
-  createdAt: Date.now(),
-});
-
 export default function Chatbot() {
-  const [messages, setMessages] = useState<ChatHistoryMessage[]>(() => [
-    welcomeMessage(),
-  ]);
+  const [messages, setMessages] = useState<ChatHistoryMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
   const [historyReady, setHistoryReady] = useState(false);
@@ -122,7 +113,7 @@ export default function Chatbot() {
   };
 
   const handleClear = () => {
-    setMessages([welcomeMessage()]);
+    setMessages([]);
     setLastMessageId(null);
 
     try {
@@ -138,7 +129,7 @@ export default function Chatbot() {
         <button
           type="button"
           onClick={handleClear}
-          disabled={isLoading || messages.length <= 1}
+          disabled={isLoading || messages.length === 0}
           className="text-brown-light hover:text-brown text-xs underline disabled:cursor-not-allowed disabled:opacity-50"
         >
           대화 지우기
@@ -146,6 +137,9 @@ export default function Chatbot() {
       </div>
       {/* 채팅 메시지 영역 */}
       <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+        {messages.length === 0 && !isLoading && (
+          <ChatWelcome onPrompt={handleSend} />
+        )}
         {messages.map((msg) => (
           <div
             key={msg.id}

@@ -34,7 +34,9 @@ export function parseChatHistory(
       return null;
     }
 
-    return parsed as ChatHistoryMessage[];
+    return (parsed as ChatHistoryMessage[]).filter(
+      (message) => message.id !== "welcome"
+    );
   } catch {
     return null;
   }

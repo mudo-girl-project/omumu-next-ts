@@ -22,6 +22,22 @@ describe("parseChatHistory", () => {
     ]);
   });
 
+  it("removes the legacy welcome message", () => {
+    expect(
+      parseChatHistory(
+        JSON.stringify([
+          {
+            id: "welcome",
+            content: "old welcome",
+            isUser: false,
+            createdAt: 1,
+          },
+          { id: "2", content: "추천해줘", isUser: true, createdAt: 2 },
+        ])
+      )
+    ).toEqual([{ id: "2", content: "추천해줘", isUser: true, createdAt: 2 }]);
+  });
+
   it("ignores malformed persisted data", () => {
     expect(parseChatHistory("{")).toBeNull();
   });
