@@ -2,7 +2,7 @@
 
 ## Repository Workflow
 
-- Read the active task under `docs/codex/tasks/active` before changing code.
+- Read `docs/codex/tasks/active/README.md` and any active task files before changing code.
 - Read these project-specific instructions before the `codex-harness-core` section below.
 - Use the latest `origin/dev` as the base for task branches and target pull requests to `dev`.
 - Treat `main` as the release branch; do not push or merge task changes directly to it.
@@ -30,7 +30,7 @@
 
 - Core version: 0.3.0
 - 프로젝트 고유 지침은 공통 core 지침보다 우선합니다.
-- Read the active task under `docs/codex/tasks/active` before work starts.
+- Read `docs/codex/tasks/active/README.md` and any active task files before work starts.
 
 ## Project Map
 
