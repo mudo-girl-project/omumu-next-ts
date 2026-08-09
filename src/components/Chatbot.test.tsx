@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import Chatbot, { requestChatReply } from "./Chatbot";
+import Chatbot, { getScrollBehavior, requestChatReply } from "./Chatbot";
 
 describe("Chatbot", () => {
   it("offers useful prompts before the first message", () => {
@@ -11,6 +11,19 @@ describe("Chatbot", () => {
     expect(html).toContain("무도 가요제 중 재밌는 편 추천해줘");
     expect(html).toContain("밥 먹는 동안 볼 짧은 편 찾아줘");
     expect(html).not.toContain("박명수랑 정준하가 나오는 영상 찾아줘");
+  });
+
+  it("exposes the conversation as a labelled log", () => {
+    const html = renderToStaticMarkup(<Chatbot />);
+
+    expect(html).toContain('role="log"');
+    expect(html).toContain('aria-label="대화 내용"');
+    expect(html).toContain('aria-busy="false"');
+  });
+
+  it("uses instant scrolling when reduced motion is requested", () => {
+    expect(getScrollBehavior(true)).toBe("auto");
+    expect(getScrollBehavior(false)).toBe("smooth");
   });
 
   it("uses one request function for chat replies", async () => {

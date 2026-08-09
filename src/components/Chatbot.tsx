@@ -48,6 +48,12 @@ export async function requestChatReply(
   return data.response;
 }
 
+export function getScrollBehavior(
+  prefersReducedMotion: boolean
+): ScrollBehavior {
+  return prefersReducedMotion ? "auto" : "smooth";
+}
+
 export default function Chatbot() {
   const [messages, setMessages] = useState<ChatHistoryMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +65,13 @@ export default function Chatbot() {
   const scrollToMessage = (messageId: string) => {
     const messageEl = messageRefs.current.get(messageId);
     if (messageEl) {
-      messageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      const prefersReducedMotion = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      messageEl.scrollIntoView({
+        behavior: getScrollBehavior(Boolean(prefersReducedMotion)),
+        block: "start",
+      });
     }
   };
 
@@ -156,13 +168,19 @@ export default function Chatbot() {
           type="button"
           onClick={handleClear}
           disabled={isLoading || messages.length === 0}
-          className="text-brown-light hover:text-brown text-xs underline disabled:cursor-not-allowed disabled:opacity-50"
+          className="text-brown-light hover:text-brown focus-visible:ring-brown min-h-11 rounded px-2 text-xs underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           대화 지우기
         </button>
       </div>
       {/* 채팅 메시지 영역 */}
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+      <div
+        role="log"
+        aria-label="대화 내용"
+        aria-busy={isLoading}
+        aria-relevant="additions"
+        className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4"
+      >
         {messages.length === 0 && !isLoading && (
           <ChatWelcome onPrompt={handleSend} />
         )}
