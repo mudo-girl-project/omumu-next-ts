@@ -7,9 +7,18 @@ interface ChatMessageProps {
   message: string;
   isUser: boolean;
   isLoading?: boolean;
+  createdAt?: number;
 }
 
-export default function ChatMessage({ message, isUser, isLoading }: ChatMessageProps) {
+export default function ChatMessage({ message, isUser, isLoading, createdAt }: ChatMessageProps) {
+  const time =
+    typeof createdAt === "number"
+      ? new Intl.DateTimeFormat("ko-KR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(createdAt)
+      : null;
+
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       <div
@@ -94,6 +103,14 @@ export default function ChatMessage({ message, isUser, isLoading }: ChatMessageP
               {message}
             </ReactMarkdown>
           </div>
+        )}
+        {typeof createdAt === "number" && time && !isLoading && (
+          <time
+            dateTime={new Date(createdAt).toISOString()}
+            className="mt-1 block text-right text-xs opacity-60"
+          >
+            {time}
+          </time>
         )}
       </div>
     </div>
