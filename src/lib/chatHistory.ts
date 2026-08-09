@@ -7,7 +7,9 @@ export interface ChatHistoryMessage {
   createdAt: number;
 }
 
-export function parseChatHistory(value: string | null): ChatHistoryMessage[] | null {
+export function parseChatHistory(
+  value: string | null
+): ChatHistoryMessage[] | null {
   if (!value) {
     return null;
   }
