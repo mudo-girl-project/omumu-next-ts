@@ -154,6 +154,7 @@ Publish `feat/chat-empty-state` as a draft PR to `dev`, review, improve, and mer
 
 **Files:**
 
+- Create: `src/components/ChatInput.test.tsx`
 - Modify: `src/components/ChatInput.tsx`
 - Modify: `src/components/Chatbot.tsx`
 
@@ -191,9 +192,10 @@ Commit as `fix(chat): improve composer usability` on `fix/chat-composer-usabilit
 
 **Files:**
 
+- Create: `src/components/Chatbot.test.tsx`
+- Create: `src/components/ChatMessage.test.tsx`
 - Modify: `src/components/Chatbot.tsx`
 - Modify: `src/components/ChatMessage.tsx`
-- Add focused component tests beside the changed components when behavior cannot be covered through an existing test.
 
 **Interfaces:**
 
@@ -206,8 +208,8 @@ Extract only the request function needed by initial send and retry. Prove that b
 
 - [ ] **Step 2: Run focused tests and observe expected failures**
 
-Run the new component test files with `npm test -- <paths>`.
-Expected: retry and copy controls are absent.
+Run: `npm test -- src/components/Chatbot.test.tsx src/components/ChatMessage.test.tsx`
+Expected: the retry path and copy-status behavior are unavailable.
 
 - [ ] **Step 3: Implement transient recovery state**
 
@@ -266,10 +268,11 @@ Commit as `fix(chat): bound browser history` on `fix/chat-history-bounds`, creat
 **Files:**
 
 - Modify: `src/components/Chatbot.tsx`
+- Modify: `src/components/Chatbot.test.tsx`
 - Modify: `src/components/ChatMessage.tsx`
+- Modify: `src/components/ChatMessage.test.tsx`
 - Modify: `src/app/page.tsx`
 - Modify: `src/app/globals.css`
-- Modify focused component tests where semantic behavior changes.
 
 **Interfaces:**
 
@@ -322,4 +325,4 @@ Expected: all commands exit 0.
 
 - [ ] **Step 3: Remove merged task branches and the temporary worktree**
 
-Delete only the seven local/remote branches created by this plan after their PRs are merged. Preserve unrelated branches and all untracked files in the primary `main` checkout.
+Delete only the local/remote branches created by this delivery after their PRs are merged. Preserve unrelated branches and all untracked files in the primary `main` checkout.
