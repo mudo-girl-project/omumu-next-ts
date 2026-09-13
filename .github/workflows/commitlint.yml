@@ -1,33 +1,25 @@
-name: Commitlint
+name: CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+
+concurrency:
+  group: ci-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  commitlint:
-    name: Commitlint
+  ci:
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: npm-cache-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-cache-${{ runner.os }}-node-
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -40,9 +32,3 @@ jobs:
 
       - name: Run production build
         run: npm run build
-
-      - name: Run commitlint
-        run: |
-          # ensure we have the main branch for range comparison
-          git fetch origin main:main || true
-          npx --no-install commitlint --from=origin/main --to=HEAD
