@@ -117,7 +117,7 @@ PR 제목도 커밋 규칙과 비슷하게 작성합니다: `type(scope): subjec
 - 주의할 점이나 마이그레이션 필요 여부
 
 ## 체크리스트
-- [ ] 로컬에서 빌드/테스트 통과
+- [ ] 로컬 전체 검증 `npm run check` 통과
 - [ ] 커밋 메시지 규칙 준수
 - [ ] 필요한 문서(README/CONTRIBUTING) 수정
 
@@ -135,6 +135,7 @@ PR 제목도 커밋 규칙과 비슷하게 작성합니다: `type(scope): subjec
 
 - 코드 포맷: `prettier` 사용
 - ESLint 규칙을 따르세요. 로컬에서 `npm run lint`로 확인 가능합니다.
+- GitHub Actions CI는 사용하지 않습니다. PR 전에 `npm run check`(format:check + lint + test + build)를 로컬에서 실행하세요.
 
 ## 기여 감사
 

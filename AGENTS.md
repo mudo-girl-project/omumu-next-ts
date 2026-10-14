@@ -16,7 +16,8 @@
 
 ## Required Verification
 
-- Install: `npm ci` in CI; `npm install` for local dependency updates.
+- Install: `npm ci` for a clean install; `npm install` for local dependency updates.
+- Full check (GitHub Actions CI is not used; run before every PR): `npm run check`.
 - Test: `npm test`.
 - Lint: `npm run lint`.
 - Format: `npm run format:check`.

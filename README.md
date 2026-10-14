@@ -45,11 +45,13 @@ npm run dev
 
 ### 4. 검증
 
+GitHub Actions CI는 사용하지 않습니다. PR 전에 로컬에서 전체 검증을 실행하세요.
+
 ```bash
-npm run lint
-npm test
-npm run build
+npm run check  # format:check + lint + test + build
 ```
+
+커밋 메시지 규칙은 `.husky/commit-msg` 훅의 `commitlint`가 로컬에서 검증합니다.
 
 ## 주요 기능
 
