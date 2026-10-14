@@ -12,7 +12,8 @@
     "commitlint": "commitlint --version",
     "commit": "cz",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run lint && npm test && npm run build"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

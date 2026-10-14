@@ -9,7 +9,7 @@
 
 ## 체크리스트
 
-- [ ] 로컬 빌드/테스트 통과
+- [ ] 로컬 전체 검증 `npm run check` 통과 (GitHub Actions CI 없음)
 - [ ] 커밋 메시지 규칙(Conventional Commit) 준수
 - [ ] 문서(README/CONTRIBUTING) 업데이트 필요 시 반영
 
