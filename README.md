@@ -11,7 +11,7 @@
 - **Language**: TypeScript
 - **Styling**: TailwindCSS
 - **Font**: Pretendard (프리텐다드)
-- **AI**: Google Gemini 2.5 Flash (기본값)
+- **AI**: Google Gemini 3.5 Flash-Lite (기본값)
 
 ## 시작하기
 
@@ -30,7 +30,7 @@ cp .env.example .env.local
 ```
 
 - `GEMINI_API_KEY`: Google AI Studio에서 발급한 Gemini API 키
-- `GEMINI_MODEL`: 사용할 모델(기본값: `gemini-2.5-flash`)
+- `GEMINI_MODEL`: 사용할 모델(기본값: `gemini-3.5-flash-lite`)
 - `ADSENSE_CLIENT`: AdSense publisher ID에서 `ca-pub-`를 제외한 값(광고를 사용할 때만)
 
 > 💡 Gemini API 키는 [Google AI Studio](https://aistudio.google.com/app/apikey)에서 무료로 발급받을 수 있습니다.
