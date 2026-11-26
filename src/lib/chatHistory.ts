@@ -1,4 +1,5 @@
 export const CHAT_HISTORY_KEY = "omumu-chat-history";
+const MAX_CHAT_HISTORY = 100;
 
 export interface ChatHistoryMessage {
   id: string;
@@ -7,7 +8,17 @@ export interface ChatHistoryMessage {
   createdAt: number;
 }
 
-export function parseChatHistory(value: string | null): ChatHistoryMessage[] | null {
+export function limitChatHistory(
+  messages: ChatHistoryMessage[]
+): ChatHistoryMessage[] {
+  return messages
+    .filter((message) => message.id !== "welcome")
+    .slice(-MAX_CHAT_HISTORY);
+}
+
+export function parseChatHistory(
+  value: string | null
+): ChatHistoryMessage[] | null {
   if (!value) {
     return null;
   }
@@ -32,8 +43,12 @@ export function parseChatHistory(value: string | null): ChatHistoryMessage[] | n
       return null;
     }
 
-    return parsed as ChatHistoryMessage[];
+    return limitChatHistory(parsed as ChatHistoryMessage[]);
   } catch {
     return null;
   }
+}
+
+export function serializeChatHistory(messages: ChatHistoryMessage[]): string {
+  return JSON.stringify(limitChatHistory(messages));
 }

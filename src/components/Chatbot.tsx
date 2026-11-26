@@ -3,25 +3,61 @@
 import { useState, useRef, useEffect } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import ChatWelcome from "./ChatWelcome";
 import {
   CHAT_HISTORY_KEY,
+  limitChatHistory,
   parseChatHistory,
+  serializeChatHistory,
   type ChatHistoryMessage,
 } from "@/lib/chatHistory";
 
-const welcomeMessage = (): ChatHistoryMessage => ({
-  id: "welcome",
-  content:
-    '안녕하세요! 🍚📺\n\n저는 밥 먹으면서 볼 무한도전 영상을 추천해드리는 AI예요.\n\n어떤 분위기의 영상을 보고 싶으세요?\n\n예시:\n• "유재석이 나오는 웃긴 영상 추천해줘"\n• "감동적인 무한도전 에피소드 알려줘"\n• "박명수랑 정준하가 나오는 영상 찾아줘"\n• "무도 가요제 중에 제일 재밌는 거 추천해줘"',
-  isUser: false,
-  createdAt: Date.now(),
-});
+export async function requestChatReply(
+  message: string,
+  fetcher: typeof fetch = fetch
+): Promise<string> {
+  const response = await fetcher("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message }),
+  });
+  const data: unknown = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "object" &&
+        data !== null &&
+        "error" in data &&
+        typeof data.error === "string"
+        ? data.error
+        : "오류가 발생했습니다."
+    );
+  }
+
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    !("response" in data) ||
+    typeof data.response !== "string"
+  ) {
+    throw new Error("올바르지 않은 응답입니다.");
+  }
+
+  return data.response;
+}
+
+export function getScrollBehavior(
+  prefersReducedMotion: boolean
+): ScrollBehavior {
+  return prefersReducedMotion ? "auto" : "smooth";
+}
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState<ChatHistoryMessage[]>(() => [
-    welcomeMessage(),
-  ]);
+  const [messages, setMessages] = useState<ChatHistoryMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [failedMessage, setFailedMessage] = useState<string | null>(null);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
   const [historyReady, setHistoryReady] = useState(false);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -29,7 +65,13 @@ export default function Chatbot() {
   const scrollToMessage = (messageId: string) => {
     const messageEl = messageRefs.current.get(messageId);
     if (messageEl) {
-      messageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      const prefersReducedMotion = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      messageEl.scrollIntoView({
+        behavior: getScrollBehavior(Boolean(prefersReducedMotion)),
+        block: "start",
+      });
     }
   };
 
@@ -61,11 +103,37 @@ export default function Chatbot() {
     }
 
     try {
-      window.localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+      window.localStorage.setItem(
+        CHAT_HISTORY_KEY,
+        serializeChatHistory(messages)
+      );
     } catch {
       // Keep the current conversation available even when browser storage is unavailable.
     }
   }, [historyReady, messages]);
+
+  const requestReply = async (message: string) => {
+    setIsLoading(true);
+    setFailedMessage(null);
+
+    try {
+      const reply = await requestChatReply(message);
+      const responseCreatedAt = Date.now();
+      const aiMessage: ChatHistoryMessage = {
+        id: (responseCreatedAt + 1).toString(),
+        content: reply,
+        isUser: false,
+        createdAt: responseCreatedAt,
+      };
+
+      setMessages((prev) => limitChatHistory([...prev, aiMessage]));
+      setLastMessageId(aiMessage.id);
+    } catch {
+      setFailedMessage(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSend = async (message: string) => {
     const createdAt = Date.now();
@@ -76,53 +144,14 @@ export default function Chatbot() {
       createdAt,
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => limitChatHistory([...prev, userMessage]));
     setLastMessageId(userMessage.id);
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "오류가 발생했습니다.");
-      }
-
-      const responseCreatedAt = Date.now();
-      const aiMessage: ChatHistoryMessage = {
-        id: (responseCreatedAt + 1).toString(),
-        content: data.response,
-        isUser: false,
-        createdAt: responseCreatedAt,
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
-      setLastMessageId(aiMessage.id);
-    } catch (error) {
-      const responseCreatedAt = Date.now();
-      const errorMessage: ChatHistoryMessage = {
-        id: (responseCreatedAt + 1).toString(),
-        content: `죄송해요, 오류가 발생했어요. 😢\n\n${error instanceof Error ? error.message : "잠시 후 다시 시도해주세요."}`,
-        isUser: false,
-        createdAt: responseCreatedAt,
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
-      setLastMessageId(errorMessage.id);
-    } finally {
-      setIsLoading(false);
-    }
+    await requestReply(message);
   };
 
   const handleClear = () => {
-    setMessages([welcomeMessage()]);
+    setMessages([]);
+    setFailedMessage(null);
     setLastMessageId(null);
 
     try {
@@ -138,20 +167,31 @@ export default function Chatbot() {
         <button
           type="button"
           onClick={handleClear}
-          disabled={isLoading || messages.length <= 1}
-          className="text-brown-light hover:text-brown text-xs underline disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isLoading || messages.length === 0}
+          className="text-brown-light hover:text-brown focus-visible:ring-brown min-h-11 rounded px-2 text-xs underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           대화 지우기
         </button>
       </div>
       {/* 채팅 메시지 영역 */}
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+      <div
+        role="log"
+        aria-label="대화 내용"
+        aria-busy={isLoading}
+        aria-relevant="additions"
+        className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4"
+      >
+        {messages.length === 0 && !isLoading && (
+          <ChatWelcome onPrompt={handleSend} />
+        )}
         {messages.map((msg) => (
           <div
             key={msg.id}
             ref={(el) => {
               if (el) {
                 messageRefs.current.set(msg.id, el);
+              } else {
+                messageRefs.current.delete(msg.id);
               }
             }}
           >
@@ -162,13 +202,28 @@ export default function Chatbot() {
             />
           </div>
         ))}
+        {failedMessage && !isLoading && (
+          <div
+            role="alert"
+            className="border-accent-light bg-ivory mx-auto flex max-w-lg items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm"
+          >
+            <p>답변을 불러오지 못했어요.</p>
+            <button
+              type="button"
+              onClick={() => void requestReply(failedMessage)}
+              className="bg-brown text-ivory-light hover:bg-brown-dark focus-visible:ring-brown min-h-11 shrink-0 rounded-lg px-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              다시 시도
+            </button>
+          </div>
+        )}
         {isLoading && (
           <ChatMessage message="" isUser={false} isLoading={true} />
         )}
       </div>
 
       {/* 입력 영역 */}
-      <ChatInput onSend={handleSend} disabled={isLoading} />
+      <ChatInput onSend={handleSend} submitting={isLoading} />
     </div>
   );
 }

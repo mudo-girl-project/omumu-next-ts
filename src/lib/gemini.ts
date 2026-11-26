@@ -34,6 +34,8 @@ export const geminiModel = genAI.getGenerativeModel({
 export async function getVideoRecommendation(
   userMessage: string
 ): Promise<string> {
-  const result = await geminiModel.generateContent(userMessage);
+  const result = await geminiModel.generateContent(userMessage, {
+    timeout: 15_000,
+  });
   return result.response.text();
 }
