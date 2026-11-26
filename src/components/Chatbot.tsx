@@ -88,6 +88,7 @@ export default function Chatbot() {
       );
 
       if (history?.length) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is only readable after hydration
         setMessages(history);
       }
     } catch {
