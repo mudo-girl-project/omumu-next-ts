@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export const geminiModel = genAI.getGenerativeModel({
-  model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+  model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite",
   systemInstruction: `당신은 무한도전 예능 유튜브 영상을 추천해주는 친근한 AI 도우미입니다.
   
 사용자가 밥 먹으면서 볼 무한도전 영상을 추천해달라고 하면, 다음 정보를 포함하여 추천해주세요:
